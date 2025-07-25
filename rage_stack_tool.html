@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rage Stack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      border-bottom: 1px solid #000;
+      padding-bottom: 0.2em;
+    }
+    #question-box {
+      margin-top: 40px;
+    }
+    #question-label {
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: block;
+    }
+    #answer-box {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      margin-bottom: 20px;
+      height: 120px;
+    }
+    .nav-buttons button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-right: 10px;
+      background: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rage Stack</h1>
+  <div id="question-box">
+    <span id="question-label"></span>
+    <textarea id="answer-box"></textarea>
+    <div class="nav-buttons">
+      <button id="back-btn">Back</button>
+      <button id="next-btn">Next</button>
+      <button id="save-btn">Finish & Save</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      'What are you going to title this rage stack?',
+      'What domain of CORE 4 are you stacking?',
+      'Who or what are you stacking?',
+      'In this moment, why has {{trigger}} triggered you to feel rage?',
+      'If you could scream at {{trigger}}, what would you say?',
+      'If you could force {{trigger}} to think, say, or do anything, what would it be?',
+      'With no filter or constraints, what do you genuinely think about {{trigger}}?',
+      'What is it that you never want to experience again with {{trigger}}?',
+      'What are the non-emotional facts about the situation with {{trigger}}?',
+      'What is the story you\'re telling yourself, created by this trigger, about {{trigger}} and the situation?',
+      'Describe the single word feelings that arise for you when you tell yourself that story.',
+      'Describe the specific thoughts and actions that arise for you when you tell yourself this story.',
+      'What evidence do you have to support this story as absolutely true?',
+      'Is the story "{{originalStory}}" true?',
+      'Are you 100% certain the story "{{originalStory}}" is true?',
+      'What might be possible for you in this situation if this story was false?',
+      'Regardless of your rage trigger with {{trigger}} and the original story "{{originalStory}}", what do you truly want for you in and beyond this situation?',
+      'What do you want for {{trigger}} in and beyond this situation?',
+      'What do you want for {{trigger}} and YOU in and beyond this situation?',
+      'If you keep telling yourself this original story "{{originalStory}}", will it ultimately give you what you want?',
+      'Are you ready to let go of the original story and expand your mind and reality around this trigger while you walk the block?',
+      'Letting go of the original story "{{originalStory}}" and choosing to make it about specifically about you, what is the ME VERSION of the story?',
+      'What evidence can you find to prove this ME story is true and open up your mind further?',
+      'Will telling yourself this ME story give you what you want?',
+      'What is the OPPOSITE VERSION of the story?',
+      'What evidence can you find to prove this opposite story is true and open up your mind further?',
+      'Will telling yourself this opposite story give you what you want?',
+      'What is your DESIRED VERSION of the story?',
+      'What evidence can you find to prove this desired story is accurate so you can weaponize yourself to move forward today?',
+      'Will telling yourself this desired story give you what you want?',
+      'Why has this rage trigger been extremely positive?',
+      'What is the singular lesson on life you are taking from this stack?',
+      'How does this lesson apply to your BODY domain?',
+      'How does this lesson apply to your BEING domain?',
+      'How does this lesson apply to your BALANCE domain?',
+      'How does this lesson apply to your BUSINESS domain?',
+      'What is the most significant revelation or insight you are leaving this Rage stack with, and why do you feel that way?',
+      'Compared to how you felt when you started this Rage stack, what singular words would you use to describe how you feel now completing it?',
+      'What immediate actions are you committed to taking leaving this stack?'
+    ];
+
+    let current = 0;
+    const answers = Array(questions.length).fill('');
+
+    const labelEl = document.getElementById('question-label');
+    const boxEl = document.getElementById('answer-box');
+    const nextBtn = document.getElementById('next-btn');
+    const backBtn = document.getElementById('back-btn');
+    const saveBtn = document.getElementById('save-btn');
+
+    function renderQuestion() {
+      const raw = questions[current];
+      const q = raw
+        .replace(/{{trigger}}/g, answers[2] || '[trigger]')
+        .replace(/{{originalStory}}/g, answers[9] || '[original story]')
+        .replace(/{{meVersion}}/g, answers[21] || '[me version]')
+        .replace(/{{oppositeVersion}}/g, answers[24] || '[opposite version]')
+        .replace(/{{desiredVersion}}/g, answers[27] || '[desired version]')
+        .replace(/{{whatYouWant}}/g, answers[16] || '[what you want]');
+
+      labelEl.textContent = `Q${current+1}/${questions.length}: ${q}`;
+      boxEl.value = answers[current];
+      boxEl.style.display = 'block';
+      boxEl.focus();
+      backBtn.disabled = current === 0;
+      nextBtn.disabled = current === questions.length - 1;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      answers[current] = boxEl.value;
+      if (current < questions.length - 1) current++;
+      renderQuestion();
+    });
+
+    backBtn.addEventListener('click', () => {
+      answers[current] = boxEl.value;
+      if (current > 0) current--;
+      renderQuestion();
+    });
+
+    saveBtn.addEventListener('click', () => {
+      answers[current] = boxEl.value;
+      const date = new Date().toISOString().split('T')[0];
+      let content = `RAGE STACK | ${answers[0] || 'Untitled'} | ${date}\n\n`;
+      questions.forEach((q, i) => {
+        const filled = q
+          .replace(/{{trigger}}/g, answers[2] || '[trigger]')
+          .replace(/{{originalStory}}/g, answers[9] || '[original story]')
+          .replace(/{{meVersion}}/g, answers[21] || '[me version]')
+          .replace(/{{oppositeVersion}}/g, answers[24] || '[opposite version]')
+          .replace(/{{desiredVersion}}/g, answers[27] || '[desired version]')
+          .replace(/{{whatYouWant}}/g, answers[16] || '[what you want]');
+        content += `${i+1}. ${filled}\n${answers[i] || ''}\n\n`;
+      });
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rage_stack_${date}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.addEventListener('DOMContentLoaded', renderQuestion);
+    // also render immediately in case DOMContentLoaded already fired
+    renderQuestion();
+  </script>
+</body>
+</html>
